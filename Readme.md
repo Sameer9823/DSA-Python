@@ -521,4 +521,4 @@ for x in sll:
 
 This guide provides a **detailed explanation** of **Singly Linked List**, its operations, and how to implement them in Python. 🚀 Let me know if you have any questions! 😊
 
-![Singlely linked list](image.png)
+
