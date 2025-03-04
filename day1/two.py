@@ -1,42 +1,90 @@
 class Node:
     def __init__(self, item=None, next=None):
-        self.item=item
-        self.next=next
-
-class LinkedList:
-    def __init__(self):
-        self.start = None
+        self.item = item
+        self.next = next
+        
+class SingleLinkedList:
+    def __init__(self, start=None):
+        self.start = start
         
     def is_empty(self):
         return self.start is None
+    
+    def insert_first(self, item):
+        newNode = Node(item, self.start)
+        self.start = newNode
         
-    def insert_at_start(self, item):
-        newnode = Node(item, self.start)
-        self.start = newnode
-        
-    def insert_at_end(self, item):
-        newnode = Node(item)
-        if self.is_empty():
-            self.start = newnode
-            return
+    def insert_last(self, item):
+        newNode = Node(item)
+        if not self.is_empty():
+            temp = self.start
+            while temp.next is not None:
+                temp = temp.next
+            temp.next = newNode
+        else:
+            self.start = newNode
+            
+    def insert_position(self, temp, item):
+        if temp is not None:
+            newNode = Node(item, temp.next)
+            temp.next = newNode
+            
+    def search(self, item):
         temp = self.start
-        while temp.next:
+        while temp is not None:
+            if temp.item == item:
+                return temp
             temp = temp.next
-        temp.next = newnode
-        
-    def traverse(self):
-        if self.is_empty():
-            print("List is empty")
-            return
+        return None
+            
+    def delete_first(self):
+        if self.start is not None:
+            self.start = self.start.next
+            
+    def delete_last(self):
+        if self.start is None:
+            pass
+        elif self.start.next is None:
+            self.start = None
+        else:
+            temp = self.start
+            while temp.next.next is not None:
+                temp = temp.next
+            temp.next = None
+            
+    def delete_item(self, item):
+        if self.start is None:
+            pass
+        elif self.start.next is None:
+            if self.start.item == item:
+                self.start = None
+        else:
+            temp = self.start
+            if temp.item == item:
+                self.start = temp.next
+            else:
+                while temp.next is not None:
+                    if temp.next.item == item:
+                        temp.next = temp.next.next
+                        break
+                    temp.next
+                    
+    def printList(self):
         temp = self.start
-        while temp:
-            print(temp.item, end=" -> ")
-            temp = temp.next
-        print("None")
+        while temp is not None:
+            print(temp.item, end=' -> ')
+            temp=temp.next
         
-sll = LinkedList()
-sll.insert_at_start(10)
-sll.insert_at_end(20)
-sll.insert_at_end(40)
-sll.traverse()
+            
+sll = SingleLinkedList()
+sll.insert_first(50)
+sll.insert_last(44)
+sll.insert_first(59)
+sll.printList()
+sll.insert_position(sll.search(44), 59)
+print()
+sll.printList()
+ 
+        
+                
         
