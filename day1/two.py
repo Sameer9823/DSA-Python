@@ -24,23 +24,16 @@ class SingleLinkedList:
         else:
             self.start = newNode
             
-    def insert_position(self, temp, item):
+    def insert_item(self, temp, item):
         if temp is not None:
             newNode = Node(item, temp.next)
             temp.next = newNode
             
-    def search(self, item):
-        temp = self.start
-        while temp is not None:
-            if temp.item == item:
-                return temp
-            temp = temp.next
-        return None
-            
     def delete_first(self):
         if self.start is not None:
-            self.start = self.start.next
-            
+            self.start = self.start.item
+    
+    
     def delete_last(self):
         if self.start is None:
             pass
@@ -50,8 +43,16 @@ class SingleLinkedList:
             temp = self.start
             while temp.next.next is not None:
                 temp = temp.next
-            temp.next = None
-            
+            return temp
+        
+    def search(self, item):
+        temp = self.start
+        while temp is not None:
+            if temp.item == item:
+                return temp
+            return temp.next
+        return None
+    
     def delete_item(self, item):
         if self.start is None:
             pass
@@ -61,30 +62,20 @@ class SingleLinkedList:
         else:
             temp = self.start
             if temp.item == item:
-                self.start = temp.next
+                self.start =temp.next
             else:
                 while temp.next is not None:
                     if temp.next.item == item:
                         temp.next = temp.next.next
                         break
-                    temp.next
+                    temp = temp.next
                     
-    def printList(self):
+    def print_list(self):
         temp = self.start
-        while temp is not None:
-            print(temp.item, end=' -> ')
-            temp=temp.next
-        
-            
-sll = SingleLinkedList()
-sll.insert_first(50)
-sll.insert_last(44)
-sll.insert_first(59)
-sll.printList()
-sll.insert_position(sll.search(44), 59)
-print()
-sll.printList()
- 
-        
-                
-        
+        if temp is not None:
+            print(temp.item, end=" -> ")
+            temp = temp.next
+                    
+sll= SingleLinkedList()
+sll.insert_first(55)
+sll.print_list()
