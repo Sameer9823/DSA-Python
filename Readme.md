@@ -870,3 +870,254 @@ for x in list:
 The **Doubly Linked List (DLL)** provides **greater flexibility** than an SLL by allowing **both forward and backward traversal**. It is useful for **advanced data structures**, but the additional memory and complexity should be considered.
 
 Would you like me to add a **circular DLL version** or optimize this further? 😊🚀
+
+
+### **Circular Doubly Linked List (CDLL) - Detailed Notes**
+
+#### **Definition**
+A **Circular Doubly Linked List (CDLL)** is a data structure that extends a **Doubly Linked List (DLL)** by linking the last node back to the first node, forming a circular chain. Each node contains:
+- **Data (item)**: Stores the actual value.
+- **Two pointers (prev & next)**: 
+  - `prev` points to the previous node.
+  - `next` points to the next node.
+  
+In a CDLL:
+- The first node’s `prev` points to the last node.
+- The last node’s `next` points to the first node.
+- Traversing can be done forward (`next`) or backward (`prev`).
+- CDLL prevents the need for a `NULL` check since the list is circular.
+
+---
+
+## **Advantages of CDLL**
+1. **Efficient Traversal**: Since it’s circular, we can move in both directions without worrying about reaching the end.
+2. **Fast Insertions/Deletions**: Insertions and deletions are easier and more efficient than in singly linked lists.
+3. **Better Memory Utilization**: Since no `NULL` pointers are required, memory is saved.
+4. **Useful for Circular Buffers**: Ideal for applications like process scheduling in operating systems.
+
+---
+
+## **Operations in CDLL (With Explanation)**
+
+### **1. Initialization**
+```python
+class Node:
+    def __init__(self, item=None, prev=None, next=None):
+        self.item = item
+        self.prev = prev
+        self.next = next
+
+class CircularDoublyLinkedList:
+    def __init__(self, start=None):
+        self.start = start
+```
+- The **Node class** initializes an object with `item`, `prev`, and `next` pointers.
+- The **CircularDoublyLinkedList class** has a `start` pointer that refers to the first node.
+
+---
+
+### **2. Checking If the List is Empty**
+```python
+def is_empty(self):
+    return self.start is None
+```
+- Returns `True` if the list is empty (`start` is `None`).
+
+---
+
+### **3. Inserting an Element at the Beginning**
+```python
+def insert_at_start(self, item):
+    newNode = Node(item)
+    if self.is_empty():
+        newNode.prev = newNode
+        newNode.next = newNode
+    else:
+        newNode.next = self.start
+        newNode.prev = self.start.prev
+        self.start.prev.next = newNode
+        self.start.prev = newNode
+    self.start = newNode
+```
+- **If the list is empty**: The new node is created and its `prev` and `next` pointers point to itself.
+- **If the list is not empty**:
+  - The new node's `next` points to the current start.
+  - The `prev` of the new node points to the last node.
+  - The last node’s `next` is updated to point to the new node.
+  - The previous `start` node’s `prev` is updated to the new node.
+  - The `start` pointer is updated to the new node.
+
+---
+
+### **4. Inserting an Element at the End**
+```python
+def insert_at_last(self, item):
+    newNode = Node(item)
+    if self.is_empty():
+        newNode.prev = newNode
+        newNode.next = newNode
+        self.start = newNode
+    else:
+        newNode.next = self.start
+        newNode.prev = self.start.prev
+        newNode.prev.next = newNode
+        self.start.prev = newNode
+```
+- **If the list is empty**, the new node points to itself.
+- **If not**, the last node’s `next` points to the new node, and the new node’s `prev` points to the last node.
+
+---
+
+### **5. Searching for an Element**
+```python
+def search(self, item):
+    temp = self.start
+    if temp is None:
+        return None
+    if temp.item == item:
+        return temp
+    temp = temp.next
+    while temp != self.start:
+        if temp.item == item:
+            return temp
+        temp = temp.next
+    return None
+```
+- Starts from `self.start`, iterates through the list, and returns the node if found.
+- If the loop completes and no match is found, it returns `None`.
+
+---
+
+### **6. Inserting After a Specific Node**
+```python
+def insert_sfter(self, temp, item):
+    if temp is not None:
+        newNode = Node(item)
+        newNode.next = temp.next
+        newNode.prev = temp
+        temp.next.prev = newNode
+        temp.next = newNode
+```
+- Finds the specified node (`temp`) and inserts a new node **after it**.
+- Adjusts `prev` and `next` pointers accordingly.
+
+---
+
+### **7. Printing the List**
+```python
+def print_list(self):
+    temp = self.start
+    if temp is not None:
+        print(temp.item, end=' ')
+        temp = temp.next
+        while temp is not self.start:
+            print(temp.item, end=' ')
+            temp = temp.next
+```
+- **Iterates through the list** and prints all elements.
+- Stops when it completes a full cycle back to `start`.
+
+---
+
+### **8. Deleting the First Node**
+```python
+def delete_first(self):
+    if self.start is not None:
+        if self.start.next == self.start:
+            self.start = None
+        else:
+            self.start.next.prev = self.start.prev
+            self.start.prev.next = self.start.next
+            self.start = self.start.next
+```
+- **If only one node exists**, it sets `start` to `None`.
+- **Otherwise**, it removes the first node by adjusting the pointers.
+
+---
+
+### **9. Deleting the Last Node**
+```python
+def delete_last(self):
+    if self.start is not None:
+        if self.start.next == self.start:
+            self.start = None
+        else:
+            self.start.prev.prev.next = self.start
+            self.start.prev = self.start.prev.prev
+```
+- Removes the **last node** by adjusting the second last node’s `next` pointer.
+
+---
+
+### **10. Deleting a Specific Node**
+```python
+def delete_item(self, item):
+    if self.start is not None:
+        temp = self.start
+        if temp.item == item:
+            self.delete_first()
+        else:
+            temp = temp.next
+            while temp is not self.start:
+                if temp.item == item:
+                    temp.next.prev = temp.prev
+                    temp.prev.next = temp.next
+```
+- Searches for the node with `item` and removes it by adjusting `next` and `prev` pointers.
+
+---
+
+### **11. Implementing an Iterator for Traversing**
+```python
+class CDLIterator:
+    def __init__(self, start):
+        self.current = start
+        self.count = 0
+        self.start = start
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current is None:
+            raise StopIteration
+        if self.current == self.start and self.count == 1:
+            raise StopIteration
+        else:
+            self.count = 1
+        item = self.current.item
+        self.current = self.current.next
+        return item
+```
+- Helps in iterating through the list using a loop.
+
+---
+
+### **Example Execution**
+```python
+mylist = CircularDoublyLinkedList()
+mylist.insert_at_start(10)
+mylist.insert_at_last(20)
+mylist.insert_at_last(30)
+mylist.insert_at_last(40)
+mylist.insert_at_last(40)
+mylist.insert_sfter(mylist.search(30), 45)
+mylist.delete_last()
+
+for x in mylist:
+    print(x, end=' ')
+```
+**Output:**
+```
+10 20 30 45 40 
+```
+- Inserts nodes in different positions.
+- Deletes the last node.
+- Iterates and prints the list.
+
+---
+
+## **Conclusion**
+A **Circular Doubly Linked List (CDLL)** is an advanced linked list that improves upon singly and doubly linked lists. It allows for efficient insertions, deletions, and circular traversal, making it ideal for applications like **process scheduling, multimedia applications, and circular buffers**.
+
+Would you like any modifications or further explanations? 🚀
